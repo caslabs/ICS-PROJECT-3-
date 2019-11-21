@@ -5,6 +5,7 @@ public class main {
 		// TODO Auto-generated method stub
 		System.out.println("Hello World");
 		System.out.println("Logan was here");
+		System.out.println("logan was not here");
 	}
 
 }
