@@ -10,13 +10,10 @@ public class main {
 		
 		//Jeraldy
 		System.out.println("Hello World");
-		
-<<<<<<< HEAD
-		
-=======
+	
 		//Chris 
 		System.out.println("I like die");
->>>>>>> origin/master
+
 	}
 
 }
