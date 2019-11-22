@@ -10,6 +10,8 @@ public class main {
 		//Jeraldy
 		System.out.println("Hello World");
 		
+		//Chris 
+		System.out.println("I like die");
 	}
 
 }
