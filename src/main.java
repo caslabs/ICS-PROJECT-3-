@@ -4,8 +4,8 @@ import java.util.*;
 public class main {
 	
 	//A Stack that will hold all the maps
-	static Stack<Integer> maps =new Stack<Integer>();
-	static int currMap = maps.peek();
+//	static Stack<Integer> maps =new Stack<Integer>();
+//	static int currMap = maps.peek();
 	
 	
 	/*need a funct 
@@ -15,9 +15,8 @@ public class main {
 	
 	//start up 
 	static void startUp() {
-		EZ.initialize(1000, 1000);
-	
-		
+		Screen screen = new Screen(900,900);
+		EZ.setBackgroundColor(new Color(0, 0, 0));
 	}
 	
 	//The loading screen 
@@ -39,10 +38,9 @@ public class main {
 		currMap = maps.peek();
 		mapSet(currMap);				
 	}
-	
 	public static void main(String[] args) {
 		
-		
+		startUp();
 	}
 
 }
