@@ -23,7 +23,7 @@ public class main {
 
 
 		while(true) {
-			EZImage i = EZ.addImage("assets/TeamLOGO.png",width/2, height/2, true, 255);
+			EZImage i = EZ.addImage("assets/TeamLOGO.png",width/2, height/2, true, 100);
 			EZ.refreshScreen();
 		}
 	}

@@ -2354,8 +2354,6 @@ class EZImage extends EZElement {
   } // end constructor
 
 
-
-
   @Override public void paint(Graphics2D g2) {
     if (this.isShowing) {
       if (img == null) {
