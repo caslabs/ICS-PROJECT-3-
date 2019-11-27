@@ -10,18 +10,22 @@ public class main {
 		int width = 1080;
 		int height = 720;
 		EZ.initialize(width, height);
-		EZ.addImage("assets/smile.png",width/2, height/2);
 
 		// TODO Auto-generated method stub
 		System.out.println("Hello World");
 		System.out.println("Logan was here");
 		System.out.println("logan was not here");
-		
 		//Jeraldy
 		System.out.println("Hello World");
 		
 		//Chris 
 		System.out.println("I like die");
+
+
+		while(true) {
+			EZImage i = EZ.addImage("assets/TeamLOGO.png",width/2, height/2, true, 255);
+			EZ.refreshScreen();
+		}
 	}
 
 }

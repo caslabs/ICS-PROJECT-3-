@@ -64,6 +64,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.event.MouseInputListener;
+//Jeraldys custom EZ files
+import java.awt.AlphaComposite;
 
 /**
  * Interaction with the EZ class should be done through the public static methods. EZ extends a JPanel which are among
@@ -520,9 +522,10 @@ public class EZ extends JPanel {
    * @param y center.
    * @return the image.
    */
-  public static EZImage addImage(String filename, int x, int y) {
-    EZImage vc = new EZImage(filename, x, y);
+  public static EZImage addImage(String filename, int x, int y, boolean fadeState, double modAmount) {
+    EZImage vc = new EZImage(filename, x, y, fadeState, modAmount);
     EZ.app.elements.add(vc);
+
     refreshScreen();
     return vc;
   }
@@ -2321,12 +2324,38 @@ class EZImage extends EZElement {
    * @param x center coordinate.
    * @param y center coordinate.
    */
-  public EZImage(String filename, int x, int y) {
+
+  //Custom  modAlpha Script
+  public static void modAlpha(BufferedImage modMe, double modAmount) {
+    //
+    for (int x = 0; x < modMe.getWidth(); x++) {
+      for (int y = 0; y < modMe.getHeight(); y++) {
+        //
+        int argb = modMe.getRGB(x, y); //always returns TYPE_INT_ARGB
+        int alpha = (argb >> 24) & 0xff;  //isolate alpha
+
+        alpha *= modAmount; //similar distortion to tape saturation (has scrunching effect, eliminates clipping)
+        alpha &= 0xff;      //keeps alpha in 0-255 range
+
+        argb &= 0x00ffffff; //remove old alpha info
+        argb |= (alpha << 24);  //add new alpha info
+        modMe.setRGB(x, y, argb);
+      }
+    }
+  }
+
+  public EZImage(String filename, int x, int y, boolean fadeState, double fadeAmount) {
     img = tryLoadImage(filename);
+    if (fadeState==true) {
+      modAlpha(img, fadeAmount);
+    }
     xCenter = x;
     yCenter = y;
   } // end constructor
-  
+
+
+
+
   @Override public void paint(Graphics2D g2) {
     if (this.isShowing) {
       if (img == null) {
