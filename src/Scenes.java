@@ -39,7 +39,6 @@ public class Scenes {
 
     //Startup Menu
     static void StartUPMenu(int thisMap) throws IOException {
-        System.out.println("test");
         EZ.addImage("assets/backgrounds/logan_gn.jpg",800/2, 600/2 );
         if (EZInteraction.isKeyDown(KeyEvent.VK_SPACE)) {
             System.out.println("pressed");
