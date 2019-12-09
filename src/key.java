@@ -27,7 +27,7 @@ public class key {
 		//System.out.println("test");
 		return keyObject.isPointInElement(posx,posy);
 	}
-
+	//"removes" the key from the screen
 	public void remove() {
 		keyObject.hide();
 		keyObject.moveForward(900);

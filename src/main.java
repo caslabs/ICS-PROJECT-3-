@@ -21,41 +21,41 @@
 import java.awt.Color;
 import java.io.*;
 import java.util.*;
+import java.awt.event.KeyEvent;
 
 public class main {
 	
+	static Characters logan;
 	static int score;
-	static boolean gameRunning = true;
+	static boolean gameRunning;
+	static int windowIndex;
+	static int currMap = 0;
+	
 	
 	//Array lists keys
 	static ArrayList<key> keys = new ArrayList<key>();
 
 	//start up
-	static void startUp() {
+	static void startUp(int map) throws java.io.IOException {
+		String filename = "no"; 
+		if(map == 0) {
+			filename = "background.png";
+		}
+		else if(map ==1) {
+			filename = "Background_2.png";
+		}
+		else if(map == 2) {
+			filename = "Background_3.png";
+		}
+		else if(map == 3){
+		}
+		
+		gameRunning = true;
 		Screen screen = new Screen(500,281);
 		EZ.setBackgroundColor(new Color(0, 0, 0));
-		EZ.addImage("background.png",250, 140);
-	}
-
-	//Function that runs when player completes a level
-	static void Escape() {
-		Screen screen = new Screen(600, 281);
-		EZ.setBackgroundColor(new Color(255, 255, 255));
-	}
-
-
-	
-	// win function
-	static void win() {
-		if (score == 3) {
-			EZ.closeWindowWithIndex(0);
-			gameRunning = false;
-		}
-	}
-	
-	
-	public static void main(String[] args) throws java.io.IOException {
-		startUp();
+		EZ.addImage(filename,250, 140);
+		
+		logan = new Characters("logan_walk1.png",10, 230);
 		
 		// file reading for the positions of the keys
 		FileReader keyRead = new FileReader("key_pos.txt");
@@ -68,21 +68,35 @@ public class main {
 			keys.add(new key("key.png",posx,posy));
 		}
 		keyPos.close();
-		//create Player
-		Characters logan = new Characters("logan_walk1.png",10, 230);
+	}
+	
+	//Function that runs when player completes a level
+	static void Escape()  throws java.io.IOException{
+		if (score == 3) {
+			gameRunning = false;
+			EZ.refreshScreen();
+			EZ.addImage("Background_2.png",250, 140);
+			
+		}
+		//Restarts the game when space is pressed
+		while(!gameRunning) {
+			if(EZInteraction.wasKeyReleased(KeyEvent.VK_SPACE)) {
+				EZ.closeWindowWithIndex(windowIndex);
+				gameRunning = true;
+				windowIndex++;
+				currMap++;
+				score = 0;
+				startUp(currMap);
+			}
+		}
+		
+		
+	}
 
-		while(gameRunning) 
-		{
-			//not working check if the player has touched the keys
-			//System.out.println((logan.getX() - logan.getWidth() / 2));
-			//System.out.println((logan.getY() - logan.getHeight() / 2));
-			//System.out.println(logan.getWidth());
-			//System.out.println(logan.getY());
-			//System.out.println(logan.getHeight());
-			//System.out.println(keys.get(0).isInside((logan.getX() - logan.getWidth() / 2), (logan.getY() - logan.getHeight() / 2)));
-			//System.out.println(keys.get(0));
-			//System.out.println(keys.get(0).isInside(logan.getX() - (logan.getWidth() / 2), logan.getY() - (logan.getHeight() / 2)));
-
+	public static void main(String[] args) throws java.io.IOException{
+		startUp(currMap);
+		while(gameRunning){
+			
 			for (int i = 0; i < keys.size(); i++) {
 				if (keys.get(i).isInside(logan.getX() - logan.getWidth() / 2, logan.getY() - logan.getHeight() / 2)
 						|| keys.get(i).isInside(logan.getX() + logan.getWidth() / 2,
@@ -93,13 +107,13 @@ public class main {
 								logan.getY() + logan.getHeight() / 2)) {
 					score++;
 					keys.get(i).remove();
-					//collectKey(i);
+					System.out.println("good");
 				}
-				}
-			win();
+				
+			Escape();
 			logan.move();
 			EZ.refreshScreen();
-
+		}
 		}
 	}
 }

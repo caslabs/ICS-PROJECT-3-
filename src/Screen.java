@@ -19,4 +19,8 @@ public class Screen {
 		void close() {
 		EZ.closeWindowWithIndex(0);
 	}
+	//sets the current window to the index of 0
+		void setWin() {
+			EZ.setCurrentWindow(0);
+		}
 }
