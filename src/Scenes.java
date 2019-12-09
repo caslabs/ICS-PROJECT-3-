@@ -24,6 +24,4 @@ public class Scenes {
         Screen screen = new Screen(600, 281);
         EZ.setBackgroundColor(new Color(255, 255, 255));
     }
-
-
 }

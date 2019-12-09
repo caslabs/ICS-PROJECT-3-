@@ -5,7 +5,7 @@ Chris, Logan, Jeraldy
 
 ## For Graders
 ```$xslt
-[ ] Names of team members and what they did
+[ X ] Names of team members and what they did
 [ X ] 2 Concepts and what they are
     [ X ] ArrayList
     [ X ] File Scanner/Reader

@@ -13,18 +13,18 @@ public class key {
 	
 	//variables for key 
 	int x,y;
-	EZImage key;
+	EZImage keyObject;
 	
 	//basic Constructor
 	public key(String filename, int posx, int posy) {
-		EZ.addImage(filename, posx, posy);
+		keyObject = EZ.addImage(filename, posx, posy);
 		x = posx;
 		y = posy;
 	}
 	
 	//check if key collided with player
 	public boolean isInside(int posx, int posy) {
-		return key.isPointInElement(posx,posy);
+		System.out.println("test");
+		return keyObject.isPointInElement(posx,posy);
 	}
-	
 }
