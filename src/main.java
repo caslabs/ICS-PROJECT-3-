@@ -33,8 +33,11 @@ public class main {
 	static boolean gameRunning;
 	static int windowIndex;
 	static int currMap = 0;
-	
-	
+	static EZImage BG;
+	static boolean startUPRunning = true;
+	static Screen testScreen;
+
+
 	//Array lists keys
 	static ArrayList<key> keys = new ArrayList<key>();
 
@@ -57,8 +60,8 @@ public class main {
 		gameRunning = true;
 		Screen screen = new Screen(500,281);
 		EZ.setBackgroundColor(new Color(0, 0, 0));
-		EZ.addImage(filename,250, 140);
 
+		BG = EZ.addImage(filename,250, 140);
 		
 		logan = new Characters("logan_walk1.png",10, 230);
 		
@@ -76,15 +79,15 @@ public class main {
 			keys.add(new key("key.png",posx,posy));
 		}
 		keyPos.close();
-	}
+		}
 	
 	//Function that runs when player completes a level
 	static void Escape()  throws java.io.IOException{
 		if (score == 3) {
 			gameRunning = false;
+			BG.hide();
+			logan.hideCharacter();
 			EZ.refreshScreen();
-			EZ.addImage("Background_2.png",250, 140);
-			
 		}
 		//Restarts the game when space is pressed
 		while(!gameRunning) {
@@ -102,9 +105,12 @@ public class main {
 	}
 
 	public static void main(String[] args) throws java.io.IOException{
-		startUp(currMap);
+		testScreen = new Screen(600,600);
+		while(startUPRunning) {
+			Scenes.StartUPMenu(currMap);
+		}
+
 		while(gameRunning){
-			
 			for (int i = 0; i < keys.size(); i++) {
 				if (keys.get(i).isInside(logan.getX() - logan.getWidth() / 2, logan.getY() - logan.getHeight() / 2)
 						|| keys.get(i).isInside(logan.getX() + logan.getWidth() / 2,
