@@ -4,7 +4,7 @@
  * -------------
  * Code for Character GameObject
  *
- * @author
+ * @author Logan Moniz / TA: Ritika Sharma
  * @version 1.0
  * @since   12/04/2019
  */

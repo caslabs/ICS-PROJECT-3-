@@ -11,7 +11,7 @@
  *
  *
  * @author Jeraldy Cascayan / TA: Nima Azbijari
- * @author Logan Moniz / TA:
+ * @author Logan Moniz / TA: Ritika Sharma
  * @author Chris Dang / TA: Nima Azbijari
  * @version 1.0
  * @since   12/04/2019
@@ -48,8 +48,13 @@ public class main {
 	// win function
 	static void win() {
 		if (score == 3) {
-			
+			EZ.closeWindowWithIndex(0);
 		}
+	}
+	
+	//key collection function
+	static void collectKey(int i) {
+		keys.remove(i);
 	}
 	
 	public static void main(String[] args) throws java.io.IOException {
@@ -70,11 +75,26 @@ public class main {
 		//create Player
 		Characters logan = new Characters("logan_walk1.png",10, 230);
 
-		while(gameRunning) {
+		while(gameRunning) 
+		{
+			
 			logan.move();
 			EZ.refreshScreen();
+//not working check if the player has touched the keys
+			for (int i = 0; i < 3; i++) {
+				if (keys.get(i).isInside(logan.getX() - logan.getWidth() / 2, logan.getY() - logan.getHeight() / 2)
+						|| keys.get(i).isInside(logan.getX() + logan.getWidth() / 2,
+								logan.getY() + logan.getHeight() / 2)
+						|| keys.get(i).isInside(logan.getX() + logan.getWidth() / 2,
+							logan.getY() - logan.getHeight() / 2)
+						|| keys.get(i).isInside(logan.getX() - logan.getWidth() / 2,
+								logan.getY() + logan.getHeight() / 2)) {
+					score++;
+					collectKey(i);
+				}
+				}
+			win();
 
 		}
 	}
-
 }
