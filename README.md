@@ -1,8 +1,24 @@
 # ICS-PROJECT-3
-A game by noU
+A game by noU team
 ## Collaborators
 Chris, Logan, Jeraldy
-## INSTRUCTIONS for git collaboration
+
+## For Graders
+```$xslt
+[ ] Names of team members and what they did
+[ X ] 2 Concepts and what they are
+    [ X ] ArrayList
+    [ X ] File Scanner/Reader
+[ X ] Running Program
+[ ] Formatt and commented Code
+[ X ] Indicate Class you Wrote
+[ X ] Provide Instructions on how to operate the program
+[ ] Youtube URL
+```
+
+
+
+## Instructions for git collaboration (DEV)
 ### Open git project through Open Project Directory from File System
 > Make sure you have the git clone the repo
 
