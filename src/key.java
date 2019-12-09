@@ -24,7 +24,11 @@ public class key {
 	
 	//check if key collided with player
 	public boolean isInside(int posx, int posy) {
-		System.out.println("test");
+		//System.out.println("test");
 		return keyObject.isPointInElement(posx,posy);
+	}
+
+	public void hide() {
+		keyObject.hide();
 	}
 }

@@ -54,7 +54,7 @@ public class main {
 	
 	//key collection function
 	static void collectKey(int i) {
-		keys.remove(i);
+		//keys.hide(i);
 	}
 	
 	public static void main(String[] args) throws java.io.IOException {
@@ -73,7 +73,7 @@ public class main {
 		keyPos.close();
 		
 		//create Player
-		Characters logan = new Characters("logan_walk1.png",100, 230);
+		Characters logan = new Characters("logan_walk1.png",10, 230);
 
 		while(gameRunning) 
 		{
@@ -81,17 +81,16 @@ public class main {
 			logan.move();
 			EZ.refreshScreen();
 			//not working check if the player has touched the keys
-			System.out.println((logan.getX() - logan.getWidth() / 2));
-			System.out.println((logan.getY() - logan.getHeight() / 2));
+			//System.out.println((logan.getX() - logan.getWidth() / 2));
+			//System.out.println((logan.getY() - logan.getHeight() / 2));
 			//System.out.println(logan.getWidth());
 			//System.out.println(logan.getY());
 			//System.out.println(logan.getHeight());
 			//System.out.println(keys.get(0).isInside((logan.getX() - logan.getWidth() / 2), (logan.getY() - logan.getHeight() / 2)));
-			System.out.println(keys.get(0));
-			System.out.println(keys.get(0).isInside(logan.getX() - (logan.getWidth() / 2), logan.getY() - (logan.getHeight() / 2)));
+			//System.out.println(keys.get(0));
+			//System.out.println(keys.get(0).isInside(logan.getX() - (logan.getWidth() / 2), logan.getY() - (logan.getHeight() / 2)));
 
-			for (int i = 0; i < 2; i++) {
-				System.out.println(keys.get(i));
+			for (int i = 0; i < 1; i++) {
 				if (keys.get(i).isInside(logan.getX() - logan.getWidth() / 2, logan.getY() - logan.getHeight() / 2)
 						|| keys.get(i).isInside(logan.getX() + logan.getWidth() / 2,
 								logan.getY() + logan.getHeight() / 2)
@@ -101,7 +100,8 @@ public class main {
 								logan.getY() + logan.getHeight() / 2)) {
 
 					score++;
-					collectKey(i);
+					keys.get(i).hide();
+					//collectKey(i);
 				}
 				}
 			win();
