@@ -1,5 +1,15 @@
-import java.awt.event.KeyEvent;
+/**
+ * ICS111 Project 3-Design Your Own
+ * Character Class
+ * -------------
+ * Code for Character GameObject
+ *
+ * @author
+ * @version 1.0
+ * @since   12/04/2019
+ */
 
+import java.awt.event.KeyEvent;
 public class Characters {
 	
 	//variables for character 

@@ -1,3 +1,13 @@
+/**
+ * ICS111 Project 3-Design Your Own
+ * Key Class
+ * -------------
+ * Object Class for Key GameItem
+ *
+ * @author
+ * @version 1.0
+ * @since   12/04/2019
+ */
 
 public class key {
 	
