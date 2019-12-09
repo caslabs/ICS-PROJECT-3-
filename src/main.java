@@ -25,6 +25,9 @@ import java.awt.event.KeyEvent;
 
 public class main {
 	
+	static int monsCount;
+	static Monsters bob;
+	static Monsters steve;
 	static Characters logan;
 	static int score;
 	static boolean gameRunning;
@@ -48,14 +51,19 @@ public class main {
 			filename = "Background_3.png";
 		}
 		else if(map == 3){
+			
 		}
 		
 		gameRunning = true;
 		Screen screen = new Screen(500,281);
 		EZ.setBackgroundColor(new Color(0, 0, 0));
 		EZ.addImage(filename,250, 140);
+
 		
 		logan = new Characters("logan_walk1.png",10, 230);
+		
+		bob = new Monsters("monster_1.png",100,230);
+		bob.upDown();
 		
 		// file reading for the positions of the keys
 		FileReader keyRead = new FileReader("key_pos.txt");
@@ -109,6 +117,21 @@ public class main {
 					keys.get(i).remove();
 					System.out.println("good");
 				}
+					if (bob.isInside(logan.getX() - logan.getWidth() / 2, logan.getY() - logan.getHeight() / 2)
+							|| bob.isInside(logan.getX() + logan.getWidth() / 2,
+									logan.getY() + logan.getHeight() / 2)
+							|| bob.isInside(logan.getX() + logan.getWidth() / 2,
+								logan.getY() - logan.getHeight() / 2)
+							|| bob.isInside(logan.getX() - logan.getWidth() / 2,
+									logan.getY() + logan.getHeight() / 2)) {
+						System.out.println("ungood");
+						logan.die();
+						if (logan.die()) {
+							System.out.println("dead");
+							EZ.closeWindowWithIndex(windowIndex);
+							gameRunning = false;
+						}
+					}
 				
 			Escape();
 			logan.move();

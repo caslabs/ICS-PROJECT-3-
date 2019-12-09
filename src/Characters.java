@@ -52,6 +52,10 @@ public class Characters {
 			name.moveForward(-2);
 		}
 	}
+	boolean die() {
+		name.hide();
+		return true;
+	}
 	
 	
 }
