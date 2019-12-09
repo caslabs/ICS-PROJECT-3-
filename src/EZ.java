@@ -64,20 +64,18 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.event.MouseInputListener;
-//Jeraldys custom EZ files
-import java.awt.AlphaComposite;
 
 /**
  * Interaction with the EZ class should be done through the public static methods. EZ extends a JPanel which are among
  * the few things that can be put into the JApplet. They way they work and how to interact with them is significantly
  * different from JFrames.
- * 
+ *
  * The standard usage of EZ will involve EZ.initialize() to create a window. Then usage of the add methods to place
  * elements on it. The EZ.refreshScreen() method must be called in order to update the visuals. The standard update rate
  * is 60fps.
- * 
+ *
  * Majority of the EZ methods will not work unless EZ has been initialized.
- * 
+ *
  * @author Dylan Kobayashi
  *
  */
@@ -108,11 +106,11 @@ public class EZ extends JPanel {
   private static int currentFrameRate = 60;
   private static long sleepTime = (long) (1000.0 / currentFrameRate); // default is 60fps.
   private static boolean updateASAP = false;
-  
+
   /**Used for silent error tracking.*/
   private static int errorCounter = 0;
   private static String errorMsg = "";
-  
+
   /**Used for scale testing*/
   private static volatile double startingPaintScaleX = 1;
   private static volatile double startingPaintScaleY = 1;
@@ -135,7 +133,7 @@ public class EZ extends JPanel {
   /**
    * Calling the constructor for the EZ class should never be done manually. You should be using EZ.initialize().
    * Creates an instance of EZ and sets it as primary content pane and initiates values as necessary.
-   * 
+   *
    * @param w value in pixels of how large to make the width of the inner content area.
    * @param h value in pixels of how large to make the height of the inner content area.
    */
@@ -160,7 +158,7 @@ public class EZ extends JPanel {
 
   /**
    * Used to get the window width not including the frames.
-   * 
+   *
    * @return int value equal to the number of pixels between the frames horizontally.
    */
   public static int getWindowWidth() {
@@ -169,7 +167,7 @@ public class EZ extends JPanel {
 
   /**
    * Used to get the window height not including the frames.
-   * 
+   *
    * @return int value equal to the number of pixels between the frames vertically.
    */
   public static int getWindowHeight() {
@@ -179,7 +177,7 @@ public class EZ extends JPanel {
   /**
    * Used to get the difference in time since the last refresh. Time is in milliseconds. 1 second == 1000 milliseconds.
    * If you want to change the time between updates setFrameRate() may be what you are looking for.
-   * 
+   *
    * @return int value of the difference in time. Note: Standard system time counters are usually longs. However for
    * ICS111 int is the most commonly used datatype of that family tree, and should be more than enough for delta time.
    */
@@ -195,7 +193,7 @@ public class EZ extends JPanel {
     Graphics2D g2 = (Graphics2D) g;
     g2.setColor(backgroundColor); // wash the background with specified bg color to prevent ghosting.
     g2.fillRect(0, 0, WWIDTH + 100, WHEIGHT + 100);
-    
+
     startingPaintScaleX = g2.getTransform().getScaleX();
     startingPaintScaleY = g2.getTransform().getScaleY();
 
@@ -206,29 +204,29 @@ public class EZ extends JPanel {
     }
 
   } // end paint
-  
+
   public static double getStartingPaintScaleX() {
-	  return startingPaintScaleX;
+    return startingPaintScaleX;
   }
   public static double getStartingPaintScaleY() {
-	  return startingPaintScaleY;
+    return startingPaintScaleY;
   }
 
   /**
    * This method will set the background color to the given color. Don't forget to import the Color when using this.
    * While standard Colors like Color.WHITE or Color.BLUE are available, it is possible to specify an rgb value using:
    * EZ.setBackgroundColor( new Color( r, g, b) ); where r,g,b are int values.
-   * 
+   *
    * @param c Color to use.
    */
   public static void setBackgroundColor(Color c) {
     backgroundColor = c;
   }
-  
+
   /**
    * Will pause the program for the specified amount of milliseconds.
    * Mechanically this is just an encapsulated sleep.
-   * 
+   *
    * @param msToPauseFor how many milliseconds to pause for.
    */
   public static void pause(long msToPauseFor) {
@@ -249,7 +247,7 @@ public class EZ extends JPanel {
     if (!updateASAP) {
       try {
         if(timeDelta > sleepTime){
-          Thread.sleep(sleepTime * 2 - timeDelta); 
+          Thread.sleep(sleepTime * 2 - timeDelta);
         }
         else {
           Thread.sleep(sleepTime);
@@ -262,19 +260,19 @@ public class EZ extends JPanel {
     }
     closeWindowWithIndex(-9999);
   }// end refresh screen.
-  
+
   /**
-   * 
+   *
    */
   public static void refreshScreenOfAllActiveWindows(){
-      refreshScreen();
-      for(int i = 0; i < openWindows.size(); i++) {
-          if( openWindowsStatus.get(i) ) {
-              openWindowEz.get(i).repaint();
-          }
+    refreshScreen();
+    for(int i = 0; i < openWindows.size(); i++) {
+      if( openWindowsStatus.get(i) ) {
+        openWindowEz.get(i).repaint();
       }
+    }
   }
-  
+
   /**
    * Sets the frame rate, which controls how fast the program will attempt to update itself. Note: it is very rarely
    * possible to get an exact match of frames per second due to the time statements take to execute in addition to the
@@ -282,7 +280,7 @@ public class EZ extends JPanel {
    * request a speed that cannot be done due to processing time of other components or hardware limitations. Will not
    * change current fps if given value is 0 or less. A value of 1000 is the same as setting the program to update as
    * quickly as possible, it doesn't guarantee that frame rate.
-   * 
+   *
    * @param fr an int value specifying the desired frames(updates) per second.
    */
   public static void setFrameRate(int fr) {
@@ -294,7 +292,7 @@ public class EZ extends JPanel {
 
   /**
    * Will return the current frame rate that EZ is updating at.
-   * 
+   *
    * @return int value of the current frame rate.
    */
   public static int getCurrentFrameRate() {
@@ -306,7 +304,7 @@ public class EZ extends JPanel {
    * bypass the given frame rate values causing updates to occur ASAP. There will be no CPU rest, which for most
    * programs is not necessary. Passing false will revert back to the last passed frame rate value. If none has been
    * given, 60fps is the EZ default.
-   * 
+   *
    * @param b value true means update ASAP. false means use last specified frame rate.
    */
   public static void setFrameRateASAP(boolean b) {
@@ -315,7 +313,7 @@ public class EZ extends JPanel {
 
   /**
    * Returns whether or not the program will update ASAP.
-   * 
+   *
    * @return true means it is. false means it is using the specified frame rate. 60fps is the default.
    */
   public static boolean isFrameRateASAP() {
@@ -324,7 +322,7 @@ public class EZ extends JPanel {
 
   /**
    * Adds an element for EZ to track. Generally you should not be using this. Use the more specific add methods instead.
-   * 
+   *
    * @param ve The element to add.
    * @return true or false based on whether or not the element was successfully added.
    */
@@ -354,12 +352,12 @@ public class EZ extends JPanel {
    * Adds a rectangle to the window. Returns the rectangle for later manipulation. If not immediately assigned to a
    * variable, chances are you will have this element stuck on screen which cannot be removed. As result in most cases
    * you will want to assign it to a variable.
-   * 
+   *
    * Color must be specified. Don't forget to import Color. The filled parameter will determine whether or not the
    * element will be a solid of the given color. If it is not filled, the inner parts will be fully transparent.
-   * 
+   *
    * Example usage: EZRectangle r; r = EZ.addRectangle( 200, 200, 30, 10, Color.BLACK, true);
-   * 
+   *
    * @param x center.
    * @param y center.
    * @param w width.
@@ -379,12 +377,12 @@ public class EZ extends JPanel {
    * Adds a circle to the window. Returns the circle for later manipulation. If not immediately assigned to a variable,
    * chances are you will have this element stuck on screen which cannot be removed. As result in most cases you will
    * want to assign it to a variable.
-   * 
+   *
    * Color must be specified. Don't forget to import Color. The filled parameter will determine whether or not the
    * element will be a solid of the given color. If it is not filled, the inner parts will be fully transparent.
-   * 
+   *
    * Example usage: EZCircle c; c = EZ.addCircle( 200, 200, 30, 10, Color.BLACK, true);
-   * 
+   *
    * @param x center.
    * @param y center.
    * @param w width.
@@ -404,17 +402,17 @@ public class EZ extends JPanel {
    * Adds text to the window. Returns the text for later manipulation. If not immediately assigned to a variable,
    * chances are you will have this element stuck on screen which cannot be removed. As result in most cases you will
    * want to assign it to a variable.
-   * 
+   *
    * It might not be easy to calculate left or right bound until after creation since the x,y values are where the
    * text's center will be placed.
-   * 
+   *
    * Text cannot have their width and height manually set, that will depend on the content of the text. Using this
    * addText() method will default the text size to 10px.
-   * 
+   *
    * Color must be specified. Don't forget to import Color.
-   * 
+   *
    * Example usage: EZText t; t = EZ.addText( 200, 200, "Hello  World");
-   * 
+   *
    * @param x center.
    * @param y center.
    * @param msg that will be displayed.
@@ -428,17 +426,17 @@ public class EZ extends JPanel {
    * Adds text to the window. Returns the text for later manipulation. If not immediately assigned to a variable,
    * chances are you will have this element stuck on screen which cannot be removed. As result in most cases you will
    * want to assign it to a variable.
-   * 
+   *
    * It might not be easy to calculate left or right bound until after creation since the x,y values are where the
    * text's center will be placed.
-   * 
+   *
    * Text cannot have their width and height manually set, that will depend on the content of the text. Using this
    * addText() method will default the text size to 10px.
-   * 
+   *
    * Color must be specified. Don't forget to import Color.
-   * 
+   *
    * Example usage: EZText t; t = EZ.addText( 200, 200, "Hello World", Color.BLACK);
-   * 
+   *
    * @param x center.
    * @param y center.
    * @param msg that will be displayed.
@@ -453,16 +451,16 @@ public class EZ extends JPanel {
    * Adds text to the window. Returns the text for later manipulation. If not immediately assigned to a variable,
    * chances are you will have this element stuck on screen which cannot be removed. As result in most cases you will
    * want to assign it to a variable.
-   * 
+   *
    * It might not be easy to calculate left or right bound until after creation since the x,y values are where the
    * text's center will be placed.
-   * 
+   *
    * Text cannot have their width and height manually set, that will depend on the content of the text.
-   * 
+   *
    * Color must be specified. Don't forget to import Color.
-   * 
+   *
    * Example usage: EZText t; t = EZ.addText( 200, 200, "Hello World", Color.BLACK, 20);
-   * 
+   *
    * @param x center.
    * @param y center.
    * @param msg that will be displayed.
@@ -476,21 +474,21 @@ public class EZ extends JPanel {
     refreshScreen();
     return vc;
   }
-  
+
   /**
    * Adds text to the window. Returns the text for later manipulation. If not immediately assigned to a variable,
    * chances are you will have this element stuck on screen which cannot be removed. As result in most cases you will
    * want to assign it to a variable.
-   * 
+   *
    * It might not be easy to calculate left or right bound until after creation since the x,y values are where the
    * text's center will be placed.
-   * 
+   *
    * Text cannot have their width and height manually set, that will depend on the content of the text.
-   * 
+   *
    * Color must be specified. Don't forget to import Color.
-   * 
+   *
    * Example usage: EZText t; t = EZ.addText("Arial", 200, 200, "Hello World", Color.BLACK, 20);
-   * 
+   *
    * @param fontName to display the msg in. Must be available to the system. A nonexistent font will output a console error, but will not halt the program.
    * @param x center.
    * @param y center.
@@ -512,20 +510,19 @@ public class EZ extends JPanel {
    * Adds an image to the window. Returns the image for later manipulation. If not immediately assigned to a variable,
    * chances are you will have this element stuck on screen which cannot be removed. As result in most cases you will
    * want to assign it to a variable.
-   * 
+   *
    * The size(width and height) of the image will be based upon the original attributes of the image file.
-   * 
+   *
    * Example usage: EZImage i; i = EZ.addImage( "Smile.png", 200, 300);
-   * 
+   *
    * @param filename of image
    * @param x center.
    * @param y center.
    * @return the image.
    */
-  public static EZImage addImage(String filename, int x, int y, boolean fadeState, double modAmount) {
-    EZImage vc = new EZImage(filename, x, y, fadeState, modAmount);
+  public static EZImage addImage(String filename, int x, int y) {
+    EZImage vc = new EZImage(filename, x, y);
     EZ.app.elements.add(vc);
-
     refreshScreen();
     return vc;
   }
@@ -534,14 +531,14 @@ public class EZ extends JPanel {
    * Adds a line to the window. Returns the line for later manipulation. If not immediately assigned to a variable,
    * chances are you will have this element stuck on screen which cannot be removed. As result in most cases you will
    * want to assign it to a variable.
-   * 
+   *
    * The line must be created with two points. A start and end point. The line itself will then be drawn to connect the
    * two points. By default this method will make the line thickness 1px.
-   * 
+   *
    * Color must be specified. Don't forget to import Color.
-   * 
+   *
    * Example usage: EZLine l; l = EZ.addLine( 200, 300, 600, 100, Color.BLACK);
-   * 
+   *
    * @param x1 The x value of point 1.
    * @param y1 The y value of point 1.
    * @param x2 The x value of point 2.
@@ -557,14 +554,14 @@ public class EZ extends JPanel {
    * Adds a line to the window. Returns the line for later manipulation. If not immediately assigned to a variable,
    * chances are you will have this element stuck on screen which cannot be removed. As result in most cases you will
    * want to assign it to a variable.
-   * 
+   *
    * The line must be created with two points. A start and end point. The line itself will then be drawn to connect the
    * two points. Thickness less than 1 will be automatically increased to 1.
-   * 
+   *
    * Color must be specified. Don't forget to import Color.
-   * 
+   *
    * Example usage: EZLine l; l = EZ.addLine( 200, 300, 600, 100, Color.BLACK);
-   * 
+   *
    * @param x1 The x value of point 1.
    * @param y1 The y value of point 1.
    * @param x2 The x value of point 2.
@@ -584,18 +581,18 @@ public class EZ extends JPanel {
    * Adds a polygon to the window. Returns the polygon for later manipulation. If not immediately assigned to a
    * variable, chances are you will have this element stuck on screen which cannot be removed. As result in most cases
    * you will want to assign it to a variable.
-   * 
+   *
    * The polygon must be created with two arrays. One holding a list of x values while the other holds a list of y
    * value. Each index of the arrays refer to a specific point. The order of points matter, as the polygon will be drawn
    * starting from index 0 to the end of the array. The last point will be automatically connected to the first point.
-   * 
+   *
    * Color must be specified. Don't forget to import Color.
-   * 
+   *
    * Example usage: EZPolygon p; int[] xp, yp; xp = new int[3]; yp = new int[3]; xp[0] = 100; xp[1] = 150; xp[2] = 200;
    * yp[0] = 100; yp[1] = 200; yp[2] = 100;
-   * 
+   *
    * p = EZ.addPolygon( xp, yp, Color.BLACK, true);
-   * 
+   *
    * @param xp int array containing the x values for the points.
    * @param yp int array containing the y values for the points.
    * @param c color.
@@ -611,13 +608,13 @@ public class EZ extends JPanel {
 
   /**
    * Adds a sound to the window. Returns the sound for later manipulation.
-   * 
+   *
    * You NEED to assign this to a variable otherwise you will not be able to play the sound.
-   * 
+   *
    * Currently the sound file must be in .wav format to work.
-   * 
+   *
    * Example usage: EZSound s; s = EZ.addSound("YouGotMail.wav");
-   * 
+   *
    * @param file name of the sound file including extension.
    * @return the sound.
    */
@@ -628,14 +625,14 @@ public class EZ extends JPanel {
 
   /**
    * Adds a group to the window. Will always start at coordinate 0,0.
-   * 
+   *
    * You NEED to assign this to a variable otherwise the group will not be accessible.
-   * 
+   *
    * A group by itself will not do anything. The usage is to add other elements to a group so they can maintain their
    * relative positions and be manipulated as one element.
-   * 
+   *
    * Example usage: EZGroup g; g = EZ.addGroup();
-   * 
+   *
    * @return the group.
    */
   public static EZGroup addGroup() {
@@ -652,7 +649,7 @@ public class EZ extends JPanel {
 
   /**
    * Remove one visual element that EZ is tracking.
-   * 
+   *
    * @param ve the element to remove from EZ.
    */
   public static void removeEZElement(EZElement ve) {
@@ -664,9 +661,9 @@ public class EZ extends JPanel {
    * element is the one which has been drawn last making it visually appear on top others. Will not ever return an
    * EZGroup, since technically the group itself is comprised of multiple elements. If you want the EZGroup which the
    * given element is apart, crawl up the ancestry using getParent().
-   * 
+   *
    * Polymorphism knowledge may be needed to use this method.
-   * 
+   *
    * @param x coordinate of the point.
    * @param y coordinate of the point.
    * @return the top most EZElement that is not a group.
@@ -682,9 +679,9 @@ public class EZ extends JPanel {
   /**
    * Collects and returns all elements containing the specified point. Will not return an element which is not visible.
    * Will not return an EZGroup. See getTopElementContainingPoint() for explanation.
-   * 
+   *
    * Polymorphism knowledge may be needed to use this method.
-   * 
+   *
    * @param x coordinate of the point.
    * @param y coordinate of the point.
    * @return an array containing all EZElements.
@@ -711,7 +708,7 @@ public class EZ extends JPanel {
   /**
    * Designed as a recursive method to collect all children and add them to the given arraylist. This will not add
    * groups to the ArrayList, but instead will search those groups for elements adding those elements to the ArrayList.
-   * 
+   *
    * @param group from which to start the downward search
    * @param elems the ArrayList to add all non-EZGroup children to.
    */
@@ -730,7 +727,7 @@ public class EZ extends JPanel {
   /**
    * Given an x and y coordinate, will check if that point is within the given element. This is done with respect to
    * world space. If the element is not showing, will always return false.
-   * 
+   *
    * @param x coordinate of the point.
    * @param y coordinate of the point.
    * @param ve the element to check if the point is within.
@@ -748,7 +745,7 @@ public class EZ extends JPanel {
    * Will check if the given element is the top most element at the specified point. Top most is refers to the highest
    * draw layer meaning nothing is visually in front of it. If it is not showing, will always return false. Will not
    * work with EZGroup.
-   * 
+   *
    * @param x coordinate of the point.
    * @param y coordinate of the point.
    * @param ve element to check if the point is within.
@@ -765,7 +762,7 @@ public class EZ extends JPanel {
   /**
    * Will push the given element to the back of the drawing layer. If the Element is in a group, the element will be
    * pushed to the back of that group's drawing layer.
-   * 
+   *
    * @param ve element to push back.
    * @return false if the element doesn't exist. Otherwise true.
    */
@@ -788,7 +785,7 @@ public class EZ extends JPanel {
   /**
    * Will push the given element back one drawing layer. If the element is in a group, the element will be pushed back
    * once on that group's drawing layer.
-   * 
+   *
    * @param ve element to push back.
    * @return false if the element doesn't exist. Otherwise true.
    */
@@ -818,7 +815,7 @@ public class EZ extends JPanel {
   /**
    * Will pull the given element to the front of the drawing layer. If the element is in a group, the element will be
    * pulled to the front of that group's drawing layer.
-   * 
+   *
    * @param ve the element to pull.
    * @return false if the element doesn't exist. Otherwise true.
    */
@@ -841,7 +838,7 @@ public class EZ extends JPanel {
   /**
    * Will pull the given element to the front of the drawing layer. If the element is in a group, the element will be
    * pulled forward once on that group's drawing layer.
-   * 
+   *
    * @param ve the element to pull.
    * @return false if the element doesn't exist. Otherwise true.
    */
@@ -856,7 +853,7 @@ public class EZ extends JPanel {
         elements.remove(ve);
         elements.add(pos + 1, ve);
       }// only works because the getChildren returns an editable arraylist.
-       // and will not influence either elements.
+      // and will not influence either elements.
     }
     else {
       int pos = elements.indexOf(ve);
@@ -867,7 +864,7 @@ public class EZ extends JPanel {
     }
     return true;
   } // end pull forward one layer.
-  
+
   /**
    * Will return the highest layer occupied by an element.
    * @return highest layer occupied by an element.
@@ -875,11 +872,11 @@ public class EZ extends JPanel {
   public int getHighestLayerOfAllElements() {
     return elements.size() -1;
   }
-  
+
   /**
    * Will return the index of the given element. Lower numbers have least visibility.
    * If the element is part of a group, then it will return the position in the group.
-   * 
+   *
    * @param ve the element to get the index of.
    * @return index of the element. -1 if it is not a tracked object.
    */
@@ -895,15 +892,15 @@ public class EZ extends JPanel {
       return elements.indexOf(ve);
     }
   } //end getLayerPosition
-  
+
   /**
    * Sets the layer of the given element to the specified layer if possible.
    * The layer must be zero or greater.
-   * If the provided layer higher than possible, it will just be set to highest layer. 
+   * If the provided layer higher than possible, it will just be set to highest layer.
    * Moving from a low index to higher index will cause the element at destination to shift left.
    * However, moving from a high index to lower index will cause the element at destination to shift right.
    * Layer values that match the current, will not change anything.
-   * 
+   *
    * @param ve the element to change layer.
    * @param layer index to move to.
    */
@@ -931,9 +928,9 @@ public class EZ extends JPanel {
         elements.add(ve);
       }
     } //end else did not have parent.
-    
+
   } //end setLayerOfElement
-  
+
   /**
    * Given two elements, will place the first below the second.
    * This will most likely change the index of other elements.
@@ -955,7 +952,7 @@ public class EZ extends JPanel {
       return;
     }
   } //setLayerBelow
-  
+
 
   /**
    * Given two elements, will place the first above the second.
@@ -983,12 +980,12 @@ public class EZ extends JPanel {
    * This will setup EZ for usage. Without calling this method first, none of the other EZ methods will work correctly.
    * Parameters will be used to determine width and height of window. Do not call this method more than once in a
    * program run.
-   * 
+   *
    * @param width for the content area of the window.
    * @param height for the content area of the window.
    */
   public static int initialize(int width, int height) {
-    // First time 
+    // First time
     String osName = System.getProperty("os.name").toLowerCase();
     if(osName.indexOf("mac") >= 0){
       try {
@@ -997,7 +994,7 @@ public class EZ extends JPanel {
         System.out.println("Unable to perform Mac keyboard change");
       }
     }
-    
+
     String windowName = "ICS111";
     JFrame frame = new JFrame(windowName);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -1013,7 +1010,7 @@ public class EZ extends JPanel {
     frame.setVisible(true);
     timeDelta = 0;
     lastUpdate = System.currentTimeMillis();
-    
+
     //account for number of windows
     openWindows.add(frame);
     openWindowsStatus.add(true);
@@ -1030,18 +1027,18 @@ public class EZ extends JPanel {
    */
   public static int initialize() {
     return initialize((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), (int) Toolkit.getDefaultToolkit()
-        .getScreenSize().getHeight());
+            .getScreenSize().getHeight());
   }
-  
+
   /**
-   * 
+   *
    */
   public static void setCurrentWindow(int windowIndex) {
     if( windowIndex > -1 && windowIndex < openWindows.size() && openWindowsStatus.get(windowIndex) ) {
-        app = openWindowEz.get(windowIndex);
+      app = openWindowEz.get(windowIndex);
     }
   }
-  
+
   /**
    * Will close the specified window. Numbers may change when windows close. This will depend on their order of creation.
    */
@@ -1055,7 +1052,7 @@ public class EZ extends JPanel {
       openWindowsStatus.set(windowIndex, false);
     }
     else if( windowIndex != -9999) {
-        System.out.println("Invalid window index given:" + windowIndex + ". Not closing a window.");
+      System.out.println("Invalid window index given:" + windowIndex + ". Not closing a window.");
     }
 //    //window checks: close if no windows. 1 window gets the close app on close. Renumber windows.
 //    if(openWindows.size() == 0) { System.exit(0); System.out.println("Closing program, no open windows."); }
@@ -1067,18 +1064,18 @@ public class EZ extends JPanel {
 //      }
 //    }
   } //end closeWindowWithoutClosingApplication
-  
+
   /**
    * Will return the number of open windows.
    */
   public static int getNumberOfOpenWindows() {
-      int count = 0;
-      for(int i = 0; i < openWindows.size(); i++) {
-          if(openWindowsStatus.get(i)) { count++; }
-      }
-      return count;
+    int count = 0;
+    for(int i = 0; i < openWindows.size(); i++) {
+      if(openWindowsStatus.get(i)) { count++; }
+    }
+    return count;
   }
-  
+
   public static void trackedErrorPrint() {
     System.out.println("Errors tracked:" + EZ.errorCounter);
     System.out.println("====\nErrors\n====\n:" + EZ.errorMsg + "\n====\nEnd\n====\n");
@@ -1091,7 +1088,7 @@ public class EZ extends JPanel {
  * methods that are standard for all inheriting classes. Some methods do not have the same functionality. For example,
  * while the EZImage class does have getColor() and setColor() methods, they do not have any practical usage for the
  * EZImage class.
- * 
+ *
  * @author Dylan Kobayashi
  */
 abstract class EZElement {
@@ -1101,42 +1098,42 @@ abstract class EZElement {
   /**
    * The paint method controls how the element draws itself on the screen. You should not be calling this method, it
    * will be handled by EZ.refreshScreen().
-   * 
+   *
    * @param g2 is the graphics reference to draw to the screen.
    */
   public abstract void paint(Graphics2D g2);
 
   /**
    * Returns the height of this element with respect to local space.
-   * 
+   *
    * @return height in pixels.
    */
   public abstract int getHeight();
 
   /**
    * Returns the width of this element with respect to local space.
-   * 
+   *
    * @return width in pixels.
    */
   public abstract int getWidth();
 
   /**
    * Returns the x center of this element with respect to local space.
-   * 
+   *
    * @return x coordinate.
    */
   public abstract int getXCenter();
 
   /**
    * Returns the y center of this element with respect to local space.
-   * 
+   *
    * @return y coordinate.
    */
   public abstract int getYCenter();
 
   /**
    * Will return this element's x coordinate with respect to world space(After all transformations have been applied).
-   * 
+   *
    * @return x coordinate on the world space.
    */
   public int getWorldXCenter() {
@@ -1145,7 +1142,7 @@ abstract class EZElement {
 
   /**
    * Will return this element's y coordinate with respect to world space(After all transformations have been applied).
-   * 
+   *
    * @return y coordinate on the world space.
    */
   public int getWorldYCenter() {
@@ -1155,7 +1152,7 @@ abstract class EZElement {
   /**
    * Returns the width of the object with respect to the world. This can differ from getWidth() if scale has been
    * applied and if any groups this element resides in has been affected by scale.
-   * 
+   *
    * @return width in pixels with respect to world space.
    * */
   public int getWorldWidth() {
@@ -1171,7 +1168,7 @@ abstract class EZElement {
   /**
    * Returns the height of the object with respect to the world. This can differ from getHeight() if scale has been
    * applied and if any groups this element resides in has been affected by scale.
-   * 
+   *
    * @return height in pixels with respect to world space.
    * */
   public int getWorldHeight() {
@@ -1186,35 +1183,35 @@ abstract class EZElement {
 
   /**
    * Sets the color of this element.
-   * 
+   *
    * @param c color to set this element to.
    */
   public abstract void setColor(Color c);
 
   /**
    * Returns the color of this element.
-   * 
+   *
    * @return color of this element.
    */
   public abstract Color getColor();
 
   /**
    * Will return whether or not this element is set to be filled.
-   * 
+   *
    * @return true if it is. false if it isn't.
    */
   public abstract boolean isFilled();
 
   /**
    * Will set the filled status of this element.
-   * 
+   *
    * @param f fill status that will be set.
    */
   public abstract void setFilled(boolean f);
 
   /**
    * Sets the center of the element to given x and y coordinate. Only affects local coordinate location.
-   * 
+   *
    * @param x center coordinate this element will be set to.
    * @param y center coordinate this element will be set to.
    */
@@ -1222,7 +1219,7 @@ abstract class EZElement {
 
   /**
    * Moves the center of the element by given x and y coordinate. Only affects local coordinate location.
-   * 
+   *
    * @param x amount this element's center will be shifted by.
    * @param y amount this element's center will be shifted by.
    */
@@ -1262,10 +1259,10 @@ abstract class EZElement {
    */
   public abstract void hide(); // the intention is to ensure additions take this into account.
 
-  /** 
+  /**
    * Returns whether or not the element is being painted.
    * This has nothing to do with whether or not the object is on screen.
-   * 
+   *
    * @return true if this object is being painted. false if not.
    *  */
   public boolean isShowing() {
@@ -1275,7 +1272,7 @@ abstract class EZElement {
   /**
    * Will push the given element to the back of the drawing layer. If the Element is in a group, the element will be
    * pushed to the back of that group's drawing layer.
-   * 
+   *
    */
   public void pushToBack() {
     EZ.app.pushToBack(this);
@@ -1312,44 +1309,44 @@ abstract class EZElement {
   public int getLayer() {
     return EZ.app.getLayerPosition(this);
   }
-  
+
   /**
    * Sets the draw layer of this. No change if the specified layer matches the current.
    * If moving to a higher index, the elements above will shift lower.
    * If moving to a lower index, the elements will shift higher.
-   * 
+   *
    * @param layer to move to.
    */
   public void setLayer(int layer) {
     EZ.app.setLayerOfElement(this, layer);
   }
-  
-  /** 
+
+  /**
    * Move this element below the specified element in the draw layer.
    * The placement is done by extraction and insert.
    * Will not work if they do not share the same container.
-   * 
+   *
    * @param reference element to place this below.
    */
   public void placeBelow(EZElement reference) {
     EZ.app.setLayerBelow(this, reference);
   }
-  
-  /** 
+
+  /**
    * Move this element above the specified element in the draw layer.
    * The placement is done by extraction and insert.
    * Will not work if they do not share the same container.
-   * 
+   *
    * @param reference element to place above.
    */
   public void placeAbove(EZElement reference) {
     EZ.app.setLayerAbove(this, reference);
   }
-  
-  
+
+
   /**
    * Given a string figures out how long a string is.
-   * 
+   *
    * @param s the string to calculate the width of.
    * @return int width in pixels.
    */
@@ -1359,7 +1356,7 @@ abstract class EZElement {
 
   /**
    * Used to calculated height of a given string.
-   * 
+   *
    * @param s string to calculate height of.
    * @return int height in pixels.
    */
@@ -1379,7 +1376,7 @@ abstract class EZElement {
   /**
    * This will rotate the image by specified degrees. Additive, doesn't override previous degree value. Positive
    * rotation is clockwise. Negative is counter clockwise. Values of 360 and beyond are as though it were degree % 360.
-   * 
+   *
    * @param degrees to rotate. Positive is clockwise. Negative is counter clockwise.
    */
   public void rotateBy(double degrees) {
@@ -1389,7 +1386,7 @@ abstract class EZElement {
   /**
    * This will rotate the image to specified degree. Overrides previous degree value. Positive rotation is clockwise.
    * Negative is counter clockwise. Values of 360 and beyond are as though it were degree % 360.
-   * 
+   *
    * @param degrees to rotate. Positive is clockwise. Negative is counter clockwise.
    * */
   public void rotateTo(double degrees) {
@@ -1454,7 +1451,7 @@ abstract class EZElement {
   /**
    * Will set the parent to the given group ONLY if it doesn't already have a parent.
    * Generally you should not use this, it will be handled automatically by EZGroup.
-   * 
+   *
    * @param g group to set the parent as.
    * @return true if successful. Otherwise false.
    * */
@@ -1469,7 +1466,7 @@ abstract class EZElement {
   /**
    * Will remove the group parent from this element only if it already has one.
    * Generally you should not use this, it will be handled automatically by EZGroup.
-   * 
+   *
    * @return true if successful removal. Otherwise false.
    */
   public boolean removeParent() {
@@ -1493,7 +1490,7 @@ abstract class EZElement {
 
   /**
    * Will return the group which this element is located within.
-   * 
+   *
    * @return EZGroup that this is part of.
    */
   public EZGroup getParent() {
@@ -1503,7 +1500,7 @@ abstract class EZElement {
   /**
    * This will return a Shape of the bounds of this element with respect to the world space.
    * This is not a bounding box. This is the shape itself after transformations have been applied.
-   * 
+   *
    * @return Shape instance of the bounds for this Element.
    */
   public abstract Shape getBounds();
@@ -1512,7 +1509,7 @@ abstract class EZElement {
    * This method will return a Shape which holds the bounds of the given shape that has all of the transformations of
    * the given EZElement applied to it. The transformations will take into account each of the groups that the given
    * EZElement is a part of. In brief, returns the bounds of the shape with respect to the world space.
-   * 
+   *
    * @param os original shape before transformations.
    * @param oe EZElement which to pull transformations from to calculate bounds.
    * @return Shape which holds the final bounds with respect to world space.
@@ -1526,7 +1523,7 @@ abstract class EZElement {
   /**
    * Returns the transform before being applied to the shape. The transform is affected by all groups this element is
    * contained in.
-   * 
+   *
    * @param oe The EZElement which to get the affine transform of.
    * @return the final AffineTransform that will be applied to the shape.
    */
@@ -1555,14 +1552,14 @@ abstract class EZElement {
 //    af.scale(oe.getScale(), oe.getScale());
     // As of version 9, the canvas has a starting scale of 2.0 which messes with transform calculations
     if (imageAdjust) {
-        af.translate(oe.getXCenter() * EZ.getStartingPaintScaleX(), oe.getYCenter() * EZ.getStartingPaintScaleX());
+      af.translate(oe.getXCenter() * EZ.getStartingPaintScaleX(), oe.getYCenter() * EZ.getStartingPaintScaleX());
     } else {
-        af.translate(oe.getXCenter(), oe.getYCenter());
+      af.translate(oe.getXCenter(), oe.getYCenter());
     }
     if (imageAdjust) {
-        af.scale(oe.getScale() * EZ.getStartingPaintScaleX(), oe.getScale() * EZ.getStartingPaintScaleX());
+      af.scale(oe.getScale() * EZ.getStartingPaintScaleX(), oe.getScale() * EZ.getStartingPaintScaleX());
     } else {
-        af.scale(oe.getScale(), oe.getScale());
+      af.scale(oe.getScale(), oe.getScale());
     }
     af.rotate(Math.toRadians(oe.getRotation()));
     return af;
@@ -1571,7 +1568,7 @@ abstract class EZElement {
   /**
    * Checks if the given x,y coordinates(point) are within the shape of this element.
    * The check is made with respect to world space.
-   * 
+   *
    * @param x coordinate of the point to check.
    * @param y coordinate of the point to check.
    * @return true if the specified point is within this element. Otherwise returns false.
@@ -1588,7 +1585,7 @@ abstract class EZElement {
  * will specify a bounding box for the cirlce. From there, the circle drawn will attempt to make the most usage of the
  * given bounding box ensuring that should a line be placed along the vertical or horizontal axis the opposite sides
  * will be symmetrical.
- * 
+ *
  * @author Dylan Kobayashi
  *
  */
@@ -1612,7 +1609,7 @@ class EZCircle extends EZElement {
    * While this constructor is available for usage, it is highly recommended that you do not use this.
    * Instead call EZ.addCircle() method which will perform additional background actions to get the circle to display
    * on the window properly.
-   * 
+   *
    * @param x center coordinate.
    * @param y center coordinate.
    * @param width of the circle.
@@ -1673,7 +1670,7 @@ class EZCircle extends EZElement {
     xcd = x;
     circle.x = (int) xcd - circle.width / 2;
   }
-  
+
   @Override public int getYCenter() {
     return (int) (circle.y + circle.height / 2);
   }
@@ -1708,8 +1705,8 @@ class EZCircle extends EZElement {
     circle.x = (int) xcd - circle.width / 2;
     circle.y = (int) ycd - circle.height / 2;
   }
-  
-  
+
+
   @Override public int getHeight() {
     return (int) circle.height;
   }
@@ -1717,7 +1714,7 @@ class EZCircle extends EZElement {
   /**
    * The circle can have its height changed. Does not affect width.
    * When applied, the center coordinate will not be affected.
-   * 
+   *
    * @param h new height for the circle.
    */
   public void setHeight(int h) {
@@ -1725,7 +1722,7 @@ class EZCircle extends EZElement {
     circle.height = h;
   }
 
-  
+
   @Override public int getWidth() {
     return (int) circle.width;
   }
@@ -1733,7 +1730,7 @@ class EZCircle extends EZElement {
   /**
    * The circle can have its width changed. Does not affect height.
    * When applied, the center coordinate will not be affected.
-   * 
+   *
    * @param w new width for the circle.
    */
   public void setWidth(int w) {
@@ -1741,33 +1738,33 @@ class EZCircle extends EZElement {
     circle.width = w;
   }
 
-  
+
   @Override public Color getColor() {
     return color;
   }
-  
+
   @Override public void setColor(Color c) {
     this.color = c;
   }
-  
+
   @Override public boolean isFilled() {
     return filled;
   }
-  
+
   @Override public void setFilled(boolean f) {
     filled = f;
   }
-  
+
   @Override public Shape getBounds() {
     return EZElement.boundHelper(new Ellipse2D.Double(-circle.width / 2, -circle.height / 2, circle.width,
-        circle.height), this);
+            circle.height), this);
   } // end get bounds
 
 } // end visual circle class
 
 /**
  * The EZRectangle is used to create an rectangle calculated off center coordinates, width, and height.
- * 
+ *
  * @author Dylan Kobayashi
  *
  */
@@ -1791,7 +1788,7 @@ class EZRectangle extends EZElement {
    * While this constructor is available for usage, it is highly recommended that you do not use this.
    * Instead call EZ.addRectangle() method which will perform additional background actions to get the rectangle to display
    * on the window properly.
-   * 
+   *
    * @param x center coordinate.
    * @param y center coordinate.
    * @param width of the rectangle.
@@ -1806,7 +1803,7 @@ class EZRectangle extends EZElement {
     xcd = x;
     ycd = y;
   } // end constructor
-  
+
   @Override public void paint(Graphics2D g2) {
     if (this.isShowing) {
       g2.setColor(color);
@@ -1883,12 +1880,12 @@ class EZRectangle extends EZElement {
   @Override public int getHeight() {
     return rect.height;
   }
-  
-  
+
+
   /**
    * The rectangle can have its height changed. Does not affect width.
    * When applied, the center coordinate will not be affected.
-   * 
+   *
    * @param h new height for the rectangle.
    */
   public void setHeight(int h) {
@@ -1899,11 +1896,11 @@ class EZRectangle extends EZElement {
   @Override public int getWidth() {
     return rect.width;
   }
-  
+
   /**
    * The rectangle can have its width changed. Does not affect height.
    * When applied, the center coordinate will not be affected.
-   * 
+   *
    * @param w new width for the rectangle.
    */
   public void setWidth(int w) {
@@ -1942,7 +1939,7 @@ class EZRectangle extends EZElement {
  * -in order for left alignment to be applied to a text, you must calculate the offset after changing the message.
  * -text is always "filled", using the setFilled() method will not do anything.<br>
  * -text cannot be locally scaled. Use setFontSize() instead. However, text will be affected by group scales.<br>
- * 
+ *
  * @author Dylan Kobayashi
  */
 class EZText extends EZElement {
@@ -1957,14 +1954,14 @@ class EZText extends EZElement {
   protected double yCenter;
 
   protected int fontSize = 20;
-  
+
 
   /**
    * Creates text with the given specifications.
    * While this constructor is available for usage, it is highly recommended that you do not use this.
    * Instead call EZ.addText() method which will perform additional background actions to get the text to display
    * on the window properly.
-   * 
+   *
    * @param x center coordinate for the text.
    * @param y center coordinate for the text.
    * @param msg to display.
@@ -1980,11 +1977,11 @@ class EZText extends EZElement {
     this.fontName = EZ.app.getFont().getName();
     this.dFont = EZ.app.getFont();
   } // end constructor
-  
+
   @Override public void paint(Graphics2D g2) {
     if (this.isShowing) {
       //g2.setFont(new Font(fontName, Font.PLAIN, fontSize));
-      g2.setFont(  dFont.deriveFont( (float) fontSize) ); 
+      g2.setFont(  dFont.deriveFont( (float) fontSize) );
       g2.setColor(color);
       // only print if the message has visible characters.
       if (msg.trim().length() > 0) {
@@ -2038,12 +2035,12 @@ class EZText extends EZElement {
   @Override public int getYCenter() {
     return (int) yCenter;
   }
-  
+
   /**
-  * This will set the y center coordinate of the text to the given value.
-  * Made a private method since the user should be using translateBy and translateTo instead.
-  * @param y coordinate the center will be set to.
-  */
+   * This will set the y center coordinate of the text to the given value.
+   * Made a private method since the user should be using translateBy and translateTo instead.
+   * @param y coordinate the center will be set to.
+   */
   private void setYCenter(double y) {
     this.yCenter = y;
   }
@@ -2093,7 +2090,7 @@ class EZText extends EZElement {
 
   @Override public Shape getBounds() {
     return EZElement.boundHelper(
-        new Rectangle(-this.getWidth() / 2, -this.getHeight() / 2, this.getWidth(), this.getHeight()), this);
+            new Rectangle(-this.getWidth() / 2, -this.getHeight() / 2, this.getWidth(), this.getHeight()), this);
   }
 
   @Override public void identity() {
@@ -2123,7 +2120,7 @@ class EZText extends EZElement {
     this.fontSize = f;
   }
 
-  /** 
+  /**
    * Returns the size of the font.
    * @return size in pixels.*/
   public int getFontSize() {
@@ -2151,7 +2148,7 @@ class EZText extends EZElement {
       System.out.println(s);
     }
   }
-  
+
   /**
    * Will return a String array containing all names of fonts available for usage specific to this machine.
    * While specific to this machine, unless you have tampered with java settings, the font set should the same
@@ -2161,12 +2158,12 @@ class EZText extends EZElement {
   public static String[] getAllFontNames() {
     return GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
   }
-  
-  
+
+
   /**
    * Will attempt to set the font to the specified parameter. If the font is not available on the machine, an error
    * will be output to the console, but the program will not halt.
-   * 
+   *
    * @param name of the font to use.
    */
   public void setFont(String name) {
@@ -2194,7 +2191,7 @@ class EZText extends EZElement {
       }
     } //end else try look up a system font
   } //end setfont to
-  
+
   /**
    * Will return the name of the font currently being used.
    * @return String containing the name of the font being  used.
@@ -2202,7 +2199,7 @@ class EZText extends EZElement {
   public String getFont() {
     return fontName;
   }
-  
+
   /**
    * Checks if the specified ttf file has already been loaded.
    * If it has will assign fontName and dFont correct value.
@@ -2219,7 +2216,7 @@ class EZText extends EZElement {
     }//end for each loaded file name
     return false;
   }
-  
+
   /**
    * Will try to load a font from the specified ttf file.
    * If successful, will correctly set drawing attributes.
@@ -2240,8 +2237,8 @@ class EZText extends EZElement {
       System.out.println("  The change will not be applied.");
     }
   }
-  
-  
+
+
 } // end visual text class
 
 /**
@@ -2259,7 +2256,7 @@ class EZText extends EZElement {
  * Then you wanted to tile the image. You need to make one EZImage for each of the tiles. If each EZImage had to load the data
  * you would have 1MB * # of tiles memory usage. This can get very costly in memory very quickly. While there are some
  * negative aspects to this method, it is unlikely they will be encountered in the context of ICS111.
- * 
+ *
  * @author Dylan Kobayashi
  *
  */
@@ -2269,7 +2266,7 @@ class EZImage extends EZElement {
   protected double yCenter;
   //reference to the image file.
   protected BufferedImage img;
-  
+
   protected boolean imgHasFocus;
   protected int xtlf, ytlf, xbrf, ybrf; //x y t(op) or b(ottom) l(eft) or r(ight) f(ocus) values
 
@@ -2281,7 +2278,7 @@ class EZImage extends EZElement {
   /**
    * This will check if the given image name has already been loaded into memory. If so, it will return that
    * BufferedImage, otherwise null.
-   * 
+   *
    * @param imgName to check if was loaded.
    * @return corresponding BufferedImage or null.
    */
@@ -2297,7 +2294,7 @@ class EZImage extends EZElement {
   /**
    * Try load image will automatically search opened images before trying to allocate memory for an image. Will return a
    * BufferedImage or null.
-   * 
+   *
    * @param imgName to try to open.
    * @return the BufferedImage or null.
    */
@@ -2319,40 +2316,16 @@ class EZImage extends EZElement {
    * While this constructor is available for usage, it is highly recommended that you do not use this.
    * Instead call EZ.addImage() method which will perform additional background actions to get the image to display
    * on the window properly.
-   * 
+   *
    * @param filename of the image to use.
    * @param x center coordinate.
    * @param y center coordinate.
    */
-
-  //Custom  modAlpha Script
-  public static void modAlpha(BufferedImage modMe, double modAmount) {
-    //
-    for (int x = 0; x < modMe.getWidth(); x++) {
-      for (int y = 0; y < modMe.getHeight(); y++) {
-        //
-        int argb = modMe.getRGB(x, y); //always returns TYPE_INT_ARGB
-        int alpha = (argb >> 24) & 0xff;  //isolate alpha
-
-        alpha *= modAmount; //similar distortion to tape saturation (has scrunching effect, eliminates clipping)
-        alpha &= 0xff;      //keeps alpha in 0-255 range
-
-        argb &= 0x00ffffff; //remove old alpha info
-        argb |= (alpha << 24);  //add new alpha info
-        modMe.setRGB(x, y, argb);
-      }
-    }
-  }
-
-  public EZImage(String filename, int x, int y, boolean fadeState, double fadeAmount) {
+  public EZImage(String filename, int x, int y) {
     img = tryLoadImage(filename);
-    if (fadeState==true) {
-      modAlpha(img, fadeAmount);
-    }
     xCenter = x;
     yCenter = y;
   } // end constructor
-
 
   @Override public void paint(Graphics2D g2) {
     if (this.isShowing) {
@@ -2381,10 +2354,10 @@ class EZImage extends EZElement {
         // adjust scale
         if(imgHasFocus) {
           g2.drawImage(img,
-              -(xbrf - xtlf)/2, -(ybrf-ytlf)/2,
-              (xbrf - xtlf)/2, (ybrf-ytlf)/2,
-              xtlf, ytlf,
-              xbrf, ybrf, null);
+                  -(xbrf - xtlf)/2, -(ybrf-ytlf)/2,
+                  (xbrf - xtlf)/2, (ybrf-ytlf)/2,
+                  xtlf, ytlf,
+                  xbrf, ybrf, null);
         }
         else {
           g2.drawImage(img, -img.getWidth() / 2, -img.getHeight() / 2, null);
@@ -2401,8 +2374,8 @@ class EZImage extends EZElement {
   @Override public void hide() {
     isShowing = false;
   }
-  
-  
+
+
   @Override public int getXCenter() {
     return (int) xCenter;
   }
@@ -2415,8 +2388,8 @@ class EZImage extends EZElement {
   private void setXCenter(double x) {
     xCenter = x;
   }
-  
-  
+
+
   @Override public int getYCenter() {
     return (int) yCenter;
   }
@@ -2463,7 +2436,7 @@ class EZImage extends EZElement {
     xCenter = x;
     yCenter = y;
   }
-  
+
   @Override public void translateBy(double x, double y) {
     xCenter += x;
     yCenter += y;
@@ -2475,23 +2448,23 @@ class EZImage extends EZElement {
     rotationInDegrees = 0;
     scaleWith1AsOriginal = 1.0;
   }
-  
+
   @Override public int getHeight() {
     if(imgHasFocus) { return (ybrf - ytlf);  }
     return img.getHeight();
   }
-  
+
   @Override public int getWidth() {
-    if(imgHasFocus) { return (xbrf - xtlf);  } 
+    if(imgHasFocus) { return (xbrf - xtlf);  }
     return img.getWidth();
   }
 
   @Override public Shape getBounds() {
     return EZElement.boundHelper(
-        new Rectangle(-getWidth() / 2, -getHeight() / 2, getWidth(), getHeight()), this);
+            new Rectangle(-getWidth() / 2, -getHeight() / 2, getWidth(), getHeight()), this);
   }
-  
-  
+
+
   /**
    * Will set a focus area on the image that will be displayed instead of the entire image. The focus
    * area is determined by a rectangle shape formed by two points. The first two parameters
@@ -2513,7 +2486,7 @@ class EZImage extends EZElement {
     ybrf = yBottomRightCorner;
     imgHasFocus = true;
   }
-  
+
   /**
    * If a focus area has been set, it will be released and the entire image will be shown.
    * Otherwise no effect.
@@ -2521,7 +2494,7 @@ class EZImage extends EZElement {
   public void releaseFocus() {
     imgHasFocus = false;
   }
-  
+
   /**
    * Returns whether or not the image has a focus area set.
    * @return true if a focus area has been set, otherwise false.
@@ -2540,8 +2513,8 @@ class EZImage extends EZElement {
  * -lines are always "filled", using the setFilled() method will not do anything.<br>
  * -lines cannot be locally scaled. To change the size use setThickness(), setPoint1() and setPoint2().<br>
  * <br>
- * 
- * 
+ *
+ *
  * @author Dylan Kobayashi
  *
  */
@@ -2557,11 +2530,11 @@ class EZLine extends EZElement {
 
   /**
    * Creates a line with the specifications. Thickness less than 1 will be automatically increased to 1.
-   * 
+   *
    * While this constructor is available for usage, it is highly recommended that you do not use this.
    * Instead call EZ.addLine() method which will perform additional background actions to get the line to display
    * on the window properly.
-   * 
+   *
    * @param x1 coordinate of point 1.
    * @param y1 coordinate of point 1.
    * @param x2 coordinate of point 2.
@@ -2592,8 +2565,8 @@ class EZLine extends EZElement {
     this.y2 = y2;
 
   } // end constructor
-  
-  
+
+
   @Override public void paint(Graphics2D g2) {
     if (this.isShowing) {
       g2.setColor(color);
@@ -2694,7 +2667,7 @@ class EZLine extends EZElement {
     return this.rsub.height;
   }
 
-  
+
   @Override public Color getColor() {
     return color;
   }
@@ -2720,7 +2693,7 @@ class EZLine extends EZElement {
   /**
    * The value returned is actually the difference between the x coordinates of the two points.
    * The returned value will always be positive, even if point 2 has an x value that is less than point 1.
-   * 
+   *
    *  @return difference between the two point's x coordinate as a positive value.
    */
   @Override public int getWidth() {
@@ -2731,7 +2704,7 @@ class EZLine extends EZElement {
   /**
    * The value returned is actually the difference between the y coordinates of the two points.
    * The returned value will always be positive, even if point 2 has an y value that is less than point 1.
-   * 
+   *
    *  @return difference between the two point's y coordinate as a positive value.
    */
   @Override public int getHeight() {
@@ -2822,7 +2795,7 @@ class EZLine extends EZElement {
 /**
  * The EZPolygon is used to draw a polygon. The shape of a polygon is defined by a series of points. When drawn, lines
  * will be made to connect each of the points. The last point will have a line connecting it to the first point.
- * 
+ *
  * @author Dylan Kobayashi
  *
  */
@@ -2838,14 +2811,14 @@ class EZPolygon extends EZElement {
   protected boolean error = false;
   /** Used to track center with decimal values. */
   private double xcd, ycd;
-  
+
   /**
    * Creates a polygon with the specifications.
-   * 
+   *
    * While this constructor is available for usage, it is highly recommended that you do not use this.
    * Instead call EZ.addPolygon() method which will perform additional background actions to get the polygon to display
    * on the window properly.
-   * 
+   *
    * @param xp an array containing each of the point's x coordinates in sequence.
    * @param yp an array containing each of the point's y coordinates in sequence.
    * @param c color to draw the polygon in.
@@ -2871,7 +2844,7 @@ class EZPolygon extends EZElement {
     }
 
   } // end constructor
-  
+
   @Override public void paint(Graphics2D g2) {
     if (this.isShowing) {
       g2.setColor(color);
@@ -2930,7 +2903,7 @@ class EZPolygon extends EZElement {
   @Override public int getHeight() {
     return (int) drawShape.getBounds().getHeight();
   }
-  
+
   /**
    * Sets the center of the polygon to the given value.
    * Made a private method since the user should be using translateBy and translateTo instead.
@@ -2939,7 +2912,7 @@ class EZPolygon extends EZElement {
   private void setXCenter(double cx) {
     xcd = cx;
     drawShape.translate(-1 * (int) (drawShape.getBounds().getCenterX()), -1
-        * (int) (drawShape.getBounds().getCenterY()));
+            * (int) (drawShape.getBounds().getCenterY()));
     drawShape.translate((int) xcd, (int) ycd);
   }
 
@@ -2951,7 +2924,7 @@ class EZPolygon extends EZElement {
   private void setYCenter(double cy) {
     ycd = cy;
     drawShape.translate(-1 * (int) (drawShape.getBounds().getCenterX()), -1
-        * (int) (drawShape.getBounds().getCenterY()));
+            * (int) (drawShape.getBounds().getCenterY()));
     drawShape.translate((int) xcd, (int) ycd);
   }
 
@@ -2973,7 +2946,7 @@ class EZPolygon extends EZElement {
     rotationInDegrees = 0;
     scaleWith1AsOriginal = 1.0;
   }
-  
+
   @Override public Shape getBounds() {
     tempShape = new Polygon(drawShape.xpoints, drawShape.ypoints, drawShape.xpoints.length);
     tempShape.translate(-1 * (tempShape.getBounds().x + tempShape.getBounds().width/2), -1 * (tempShape.getBounds().y + tempShape.getBounds().height/2));
@@ -2985,7 +2958,7 @@ class EZPolygon extends EZElement {
 /**
  * This class is designed to collect keyboard and mouse input for the window.
  * The methods will not work unless EZ.initialize() has been called.
- * 
+ *
  * @author Dylan Kobayashi
  *
  */
@@ -3041,7 +3014,7 @@ class EZInteraction implements KeyListener, MouseInputListener {
     app = this;
   }
 
-  
+
   @Override public void keyPressed(KeyEvent e) {
     keypCheckInitiated = false;
     String keyToUse;
@@ -3061,17 +3034,17 @@ class EZInteraction implements KeyListener, MouseInputListener {
     }
     catch (Exception ex) {
       System.out
-          .println("Unexpected thread sync conflict in key detection.\n---Problem has been handled, but may have lost key input in the process.");
+              .println("Unexpected thread sync conflict in key detection.\n---Problem has been handled, but may have lost key input in the process.");
       ex.printStackTrace();
     }
   } // end keypressed
 
-  
+
   @Override public void keyReleased(KeyEvent e) {
     keyrCheckInitiated = false;
     String keyToUse;
     int valueToUse;
-    
+
     try {
       if ( e.getKeyCode() == KeyEvent.VK_UP ) { keyToUse = "VK_UP"; valueToUse = e.getKeyCode(); }
       else if ( e.getKeyCode() == KeyEvent.VK_DOWN ) { keyToUse = "VK_DOWN"; valueToUse = e.getKeyCode(); }
@@ -3079,14 +3052,14 @@ class EZInteraction implements KeyListener, MouseInputListener {
       else if ( e.getKeyCode() == KeyEvent.VK_RIGHT ) { keyToUse = "VK_RIGHT"; valueToUse = e.getKeyCode(); }
       else if ( ! Character.isLetterOrDigit( e.getKeyChar() ) ) { keyToUse = "kc" + e.getKeyCode(); valueToUse = e.getKeyCode(); }
       else { keyToUse = "" + e.getKeyChar(); valueToUse = e.getKeyCode(); }
-      
+
       keysReleased.put(keyToUse, valueToUse);
       keysDown.remove(keyToUse);
-      
+
     }// end try
     catch (Exception ex) {
       System.out
-          .println("Unexpected thread sync conflict in key detection.\n---Problem has been handled, but may have lost key input in the process.");
+              .println("Unexpected thread sync conflict in key detection.\n---Problem has been handled, but may have lost key input in the process.");
       ex.printStackTrace();
     }
 
@@ -3094,7 +3067,7 @@ class EZInteraction implements KeyListener, MouseInputListener {
 
   /**
    * Used for actively checking if a key is down(being pressed).
-   * 
+   *
    * @param key to check for.
    * @return true if the key is down. Otherwise false.
    */
@@ -3108,13 +3081,13 @@ class EZInteraction implements KeyListener, MouseInputListener {
        * process of going through the map. The error is result of the size starting off "larger" but because a key
        * get's released, the map decreases in size resulting in an error that may crash the thread that calls this
        * method, because thread timing is concurrent.
-       * 
+       *
        * Anyone reading this, yes the code actually utilizes multiple threads.
        */
     }
     return false;
   } // end is key down
-  
+
   /** Overload command to backwards compatible char call. */
   public static boolean isKeyDown(char c) { return isKeyDown("" + c); }
   /** Overload command to allow keycode checks. */
@@ -3168,7 +3141,7 @@ class EZInteraction implements KeyListener, MouseInputListener {
   /** Overload command to allow keycode checks. */
   public static boolean wasKeyPressed(int code) { wasKeyPressed(""); return app.keysPressed.containsValue(code); }
 
-  
+
   @Override public void mousePressed(MouseEvent me) {
     // System.out.println("Mouse pressed");
     if (me.getButton() == 1) {
@@ -3184,7 +3157,7 @@ class EZInteraction implements KeyListener, MouseInputListener {
       mrbReleased = false;
     }
   }
-  
+
   @Override public void mouseReleased(MouseEvent me) {
     if (me.getButton() == 1) { //left
       mlbPressed = false;
@@ -3200,7 +3173,7 @@ class EZInteraction implements KeyListener, MouseInputListener {
     }
   }// System.out.println("Mouse released"); }
 
-  
+
   /**
    * Updated version of left button click status.
    * Used to detect if the left button was pressed.
@@ -3227,7 +3200,7 @@ class EZInteraction implements KeyListener, MouseInputListener {
     }
     return mrbPressed;
   }
-  
+
   /**
    * Used to detect if the left button is down.
    * @return true if the left mouse button is down, otherwise false.
@@ -3235,7 +3208,7 @@ class EZInteraction implements KeyListener, MouseInputListener {
   public static boolean isMouseLeftButtonDown() {
     return mlbDown;
   }
-  
+
   /**
    * Used to detect if the right button is down.
    * @return true if the right mouse button is down, otherwise false.
@@ -3255,7 +3228,7 @@ class EZInteraction implements KeyListener, MouseInputListener {
     }
     return mlbReleased;
   }
-  
+
   /**
    * Used to detect if the right button was released.
    * There is a TIMEOUT associated to allow multiple calls within a particular update.
@@ -3268,9 +3241,9 @@ class EZInteraction implements KeyListener, MouseInputListener {
     }
     return mrbReleased;
   }
-  
 
-  
+
+
   @Override public void mouseExited(MouseEvent arg0) {
     mMoveX = -1;
     mMoveY = -1;
@@ -3308,7 +3281,7 @@ class EZInteraction implements KeyListener, MouseInputListener {
 
   @Override public void mouseEntered(MouseEvent arg0) {
   }
-  
+
   @Override public void keyTyped(KeyEvent e) {
     // System.out.println("key typed");
   }
@@ -3322,7 +3295,7 @@ class EZInteraction implements KeyListener, MouseInputListener {
  * -the associated sound cannot be changed once created, but that is ok due to storage type the overhead is relatively low. <br>
  * -while the sound is managed by EZ, EZSound is not an EZElement, as it is not draw.<br>
  * -sound files are stored in a static history with the AudioInputStream to reduce memory usage. A process similar to EZImage.<br>
- * 
+ *
  * @author Dylan Kobayashi
  */
 class EZSound {
@@ -3336,10 +3309,10 @@ class EZSound {
 
   /**
    * Creates a new sound out of the given file. Must be a .wav file.
-   * 
+   *
    * While this constructor is available for usage, it is highly recommended that you do not use this.
    * Instead call EZ.addSound() method which will perform additional background actions to bind the sound to the window.
-   * 
+   *
    * @param file of the sound to load.
    * */
   public EZSound(String file) {
@@ -3369,11 +3342,11 @@ class EZSound {
 
   /**
    * This will play the sound file from wherever the current position is.
-   * 
+   *
    */
   public void play() {
-    if( sound.getFramePosition() == sound.getFrameLength()  || 
-        (sound.getFramePosition() != 0 && sound.isRunning()) ) {
+    if( sound.getFramePosition() == sound.getFrameLength()  ||
+            (sound.getFramePosition() != 0 && sound.isRunning()) ) {
       sound.setFramePosition(0);
     }
     sound.start();
@@ -3386,7 +3359,7 @@ class EZSound {
     sound.stop();
     sound.setFramePosition(0);
   } // end stop()
-  
+
   /**
    *  Will pause the sound at it's current position. Using play() will resume from this point.
    */
@@ -3396,7 +3369,7 @@ class EZSound {
 
   /**
    * Will play from the start and loop the sound... again... and again... and again...
-   * 
+   *
    */
   public void loop() {
     sound.setFramePosition(0);
@@ -3406,13 +3379,13 @@ class EZSound {
   /**
    * Will return true if this EZSound is playing. Otherwise false.
    * @return true if playing. Otherwise false.
-   * 
+   *
    */
   public boolean isPlaying() {
     return sound.isRunning();
   }
-  
-  /** 
+
+  /**
    * Returns how many frames are held within this sound file.
    * @return Positive int value including zero indicating number of frames.
    * Otherwise -1 to indicate that the file's length cannot be determined.
@@ -3420,7 +3393,7 @@ class EZSound {
   public int getFrameLength() {
     return sound.getFrameLength();
   }
-  
+
   /**
    * Returns the current frame of the sound file.
    * @return Positive int value including zero indicating the current frame.
@@ -3428,7 +3401,7 @@ class EZSound {
   public int getFramePosistion() {
     return sound.getFramePosition();
   }
-  
+
   /**
    * Returns the total length of the sound file in microseconds.
    * @return Positive long value including zero indicating the length of the sound file.
@@ -3437,7 +3410,7 @@ class EZSound {
   public long getMicroSecondLength() {
     return sound.getMicrosecondLength();
   }
-  
+
   /**
    * Returns the current position in microseconds.
    * @return Positive long value including zero indicating the position in the sound file.
@@ -3446,7 +3419,7 @@ class EZSound {
   public long getMicroSecondPosition() {
     return sound.getMicrosecondPosition();
   }
-  
+
   /**
    * Sets the position in frames from which to continue playing.
    * This will be overridden if stop() or loop() is called after this(they reset back to start).
@@ -3456,7 +3429,7 @@ class EZSound {
     sound.setFramePosition(pos);
   }
 
-  
+
   /**
    * Sets the position in microseconds from which to continue playing.
    * This will be overridden if stop() or loop() is called after this(they reset back to start).
@@ -3466,21 +3439,21 @@ class EZSound {
   public void setMicrosecondPosition(int pos) {
     sound.setMicrosecondPosition(pos);
   }
-  
-  
+
+
 } // end class
 
 /**
  * A means to group EZElements together and manipulate them as one element.
- * 
+ *
  * Adding an element to a group does the following effects:<br>
  * |-Element center coordinates use the group's center as origin.<br>
  * |-This may cause the elements coordinates to change.<br>
  * |-The element will no longer be tracked by EZ. It will now tracked by the group.<br>
  * |-Adjusting draw layer will be limited to the group's draw layer.<br>
  * |-pushToBack, pushBackOneLayer,pullToFront,pullForwardOneLayer will be limited to the group.<br>
- * 
- * 
+ *
+ *
  * @author Dylan Kobayashi
  *
  */
@@ -3496,7 +3469,7 @@ class EZGroup extends EZElement {
 
   /**
    * Creates a group. Center position starts at 0,0. Rotations will be made around center location.
-   * 
+   *
    * While this constructor is available for usage, it is highly recommended that you do not use this.
    * Instead call EZ.addGroup() method which will perform additional background actions to get the group to display
    * on the window properly.
@@ -3512,7 +3485,7 @@ class EZGroup extends EZElement {
     this.rotationInDegrees = 0;
     this.scaleWith1AsOriginal = 1.0;
   } // end identity
-  
+
   @Override public void paint(Graphics2D g2) {
     if (this.isShowing) {
       for (EZElement e : children) {
@@ -3525,16 +3498,16 @@ class EZGroup extends EZElement {
    * EZGroups themselves do not have height, the elements they hold have such values.
    * If there are no children, will return 0.
    * If there are children, will return the difference between the top most point and bottom most point.
-   * 
+   *
    * @return 0 if no children. Otherwise the positive difference between the top most and bottom most point of all the elements within this group.
    */
   @Override public int getHeight() {
     int topMost, bottomMost;
     if(children.size() == 0){ return 0; }
-    
-    topMost = children.get(0).getYCenter() - children.get(0).getHeight()/2;    
+
+    topMost = children.get(0).getYCenter() - children.get(0).getHeight()/2;
     bottomMost = children.get(0).getYCenter() + children.get(0).getHeight()/2;
-    
+
     for(EZElement e : children) {
       if( e.getYCenter() - e.getHeight()/2 < topMost ) {
         topMost = e.getYCenter() - e.getHeight()/2;
@@ -3550,16 +3523,16 @@ class EZGroup extends EZElement {
    * EZGroups themselves do not have width, the elements they hold have such values.
    * If there are no children, will return 0.
    * If there are children, will return the difference between the left most point and right most point regardless if the child is showing or not.
-   * 
+   *
    * @return 0 if no children. Otherwise the positive difference between the left most and right most point of all the elements within this group.
    */
   @Override public int getWidth() {
     int leftMost, rightMost;
     if(children.size() == 0){ return 0; }
-    
-    leftMost = children.get(0).getXCenter() - children.get(0).getWidth()/2;    
+
+    leftMost = children.get(0).getXCenter() - children.get(0).getWidth()/2;
     rightMost = children.get(0).getXCenter() + children.get(0).getWidth()/2;
-    
+
     for(EZElement e : children) {
       if( e.getXCenter() - e.getWidth()/2 < leftMost ) {
         leftMost = e.getXCenter() - e.getWidth()/2;
@@ -3608,7 +3581,7 @@ class EZGroup extends EZElement {
    * */
   @Override public void setFilled(boolean f) { }
 
-  
+
   @Override public void translateTo(double x, double y) {
     xCurrent = x;
     yCurrent = y;
@@ -3624,7 +3597,7 @@ class EZGroup extends EZElement {
    * rectangle will always be aligned with the axis. The returned shape will be with respect to the world space.
    * This is much different from the other EZElements where the getBounds methods will return the shape after all
    * transformations including parent groups have been applied.
-   * 
+   *
    * @return the shape which is a bounding box containing all elements of this group.
    */
   @Override public Shape getBounds() {
@@ -3671,9 +3644,9 @@ class EZGroup extends EZElement {
    * Will search all children and their children(if a group) to see if the point is within the elements.
    * This is different from checking if the point is within the bound of a group because this doesn’t go by the containing
    * rectangle for all elements which may include spaces that are not covered by a child.
-   * 
+   *
    * Assumes the given point is on world space.
-   * 
+   *
    * @param x coordinate of the point.
    * @param y coordinate of the point.
    * @return true if the point is within an element of this group. Otherwise false.
@@ -3711,7 +3684,7 @@ class EZGroup extends EZElement {
    * this will not move the element. When an element is added to the group, the group will attempt to retain the
    * element's current draw layer relations with the other elements. Once the element is within a group, the draw
    * layer manipulation methods will be restricted to the draw layers within the group.
-   * 
+   *
    * @param e, the element to add.
    * @return true if it was able to add the element. Otherwise false, meaning the element was already part of a group.
    */
@@ -3720,7 +3693,7 @@ class EZGroup extends EZElement {
       // Correctly position the element's center with relation to the node's center
       e.translateTo(e.getXCenter() - xCurrent, e.getYCenter() - yCurrent);
       int addindex = -1;
-      
+
       for(int i = 0; i < children.size(); i++){
         if( EZ.app.elements.indexOf(e) < EZ.app.elements.indexOf( children.get(i) )   ){
           addindex = i;
@@ -3729,7 +3702,7 @@ class EZGroup extends EZElement {
       }
       if(addindex > -1) { children.add(addindex, e); }
       else { children.add(e); }
-      
+
       return true;
     }
     return false;
@@ -3738,11 +3711,11 @@ class EZGroup extends EZElement {
   /**
    * Will attempt to remove the specified element.
    *  The element will have coordinates, scale and rotation adjusted such that visually it will not look like anything has changed.
-   * 
+   *
    * When an element is removed from a group, it will go back to the draw layer it was at before being added to the group.
    * Any changes to the draw layer that the element received while in the group will be discarded when it is
    * removed from the group.
-   * 
+   *
    * @param e, the element to attempt to remove.
    * @return true if successful, otherwise false.
    */
@@ -3770,7 +3743,7 @@ class EZGroup extends EZElement {
         fcx = at.getTranslateX();
         fcy = at.getTranslateY();
       }
-      
+
       e.removeParent();
       children.remove(e);
       e.translateTo(fcx, fcy);
@@ -3779,10 +3752,10 @@ class EZGroup extends EZElement {
       return true;
     }
     System.out.println("Unable to remove specified Element of " +
-      Thread.currentThread().getStackTrace()[2].getFileName() + ":" +
-      Thread.currentThread().getStackTrace()[2].getLineNumber()
-      );
-    
+            Thread.currentThread().getStackTrace()[2].getFileName() + ":" +
+            Thread.currentThread().getStackTrace()[2].getLineNumber()
+    );
+
     return false;
   } // end remove element
 
@@ -3790,9 +3763,9 @@ class EZGroup extends EZElement {
    * Returns an ArrayList of EZElements containing all children of this element.
    * Will not search out sub children. For example, if an EZGroup contains EZGroups with elements, those groups
    * will be part of the ArrayList, not the children of the those groups.
-   * 
+   *
    * Note: knowledge of polymorphism may be necessary to use this method.
-   * 
+   *
    * @return an ArrayList of the children of this group.
    */
   public ArrayList<EZElement> getChildren() {

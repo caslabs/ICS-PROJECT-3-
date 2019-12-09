@@ -25,7 +25,6 @@ public class main {
 
 		while(true) {
 			EZ.setBackgroundColor(new Color(0, 0, 0));
-			EZImage i = EZ.addImage("assets/TeamLOGO.png",width/2, height/2, true, 100);
 			EZ.refreshScreen();
 		}
 	}
