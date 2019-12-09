@@ -28,7 +28,10 @@ public class key {
 		return keyObject.isPointInElement(posx,posy);
 	}
 
-	public void hide() {
+	public void remove() {
 		keyObject.hide();
+		keyObject.moveForward(900);
 	}
+	
+
 }

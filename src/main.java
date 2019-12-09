@@ -49,13 +49,10 @@ public class main {
 	static void win() {
 		if (score == 3) {
 			EZ.closeWindowWithIndex(0);
+			gameRunning = false;
 		}
 	}
 	
-	//key collection function
-	static void collectKey(int i) {
-		//keys.hide(i);
-	}
 	
 	public static void main(String[] args) throws java.io.IOException {
 		startUp();
@@ -71,15 +68,11 @@ public class main {
 			keys.add(new key("key.png",posx,posy));
 		}
 		keyPos.close();
-		
 		//create Player
 		Characters logan = new Characters("logan_walk1.png",10, 230);
 
 		while(gameRunning) 
 		{
-			
-			logan.move();
-			EZ.refreshScreen();
 			//not working check if the player has touched the keys
 			//System.out.println((logan.getX() - logan.getWidth() / 2));
 			//System.out.println((logan.getY() - logan.getHeight() / 2));
@@ -90,7 +83,7 @@ public class main {
 			//System.out.println(keys.get(0));
 			//System.out.println(keys.get(0).isInside(logan.getX() - (logan.getWidth() / 2), logan.getY() - (logan.getHeight() / 2)));
 
-			for (int i = 0; i < 1; i++) {
+			for (int i = 0; i < keys.size(); i++) {
 				if (keys.get(i).isInside(logan.getX() - logan.getWidth() / 2, logan.getY() - logan.getHeight() / 2)
 						|| keys.get(i).isInside(logan.getX() + logan.getWidth() / 2,
 								logan.getY() + logan.getHeight() / 2)
@@ -98,13 +91,14 @@ public class main {
 							logan.getY() - logan.getHeight() / 2)
 						|| keys.get(i).isInside(logan.getX() - logan.getWidth() / 2,
 								logan.getY() + logan.getHeight() / 2)) {
-
 					score++;
-					keys.get(i).hide();
+					keys.get(i).remove();
 					//collectKey(i);
 				}
 				}
 			win();
+			logan.move();
+			EZ.refreshScreen();
 
 		}
 	}
