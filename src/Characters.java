@@ -52,6 +52,9 @@ public class Characters {
 			name.moveForward(-2);
 		}
 	}
-	
+
+	void hideCharacter() {
+		name.hide();
+	}
 	
 }
