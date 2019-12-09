@@ -4,7 +4,7 @@
  * -------------
  * Object Class for Key GameItem
  *
- * @author
+ * @author Chris Dang / TA: Nima Azbijari
  * @version 1.0
  * @since   12/04/2019
  */
@@ -22,12 +22,9 @@ public class key {
 		y = posy;
 	}
 	
-	void hide() {
-		key.hide();
-	}
-	
-	void collected() {
-		key.moveForward(1000);
+	//check if key collided with player
+	public boolean isInside(int posx, int posy) {
+		return key.isPointInElement(posx,posy);
 	}
 	
 }
