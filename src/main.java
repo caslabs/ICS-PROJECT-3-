@@ -30,19 +30,20 @@ public class main {
 	static Monsters steve;
 	static Characters logan;
 	static int score;
-	static boolean gameRunning;
-	static int windowIndex;
+	static int gameRunning;
+	static int windowIndex =1;
 	static int currMap = 0;
 	static EZImage BG;
 	static boolean startUPRunning = true;
 	static Screen testScreen;
-
+	static EZSound song1 = EZ.addSound("SP.wav"); 
 
 	//Array lists keys
 	static ArrayList<key> keys = new ArrayList<key>();
 
 	//start up
 	static void startUp(int map) throws java.io.IOException {
+		song1.play();
 		String filename = "no"; 
 		if(map == 0) {
 			filename = "background.png";
@@ -53,11 +54,11 @@ public class main {
 		else if(map == 2) {
 			filename = "Background_3.png";
 		}
-		else if(map == 3){
-			
+		else {
+			lose();	
 		}
 		
-		gameRunning = true;
+		gameRunning = 0;
 		Screen screen = new Screen(500,281);
 		EZ.setBackgroundColor(new Color(0, 0, 0));
 
@@ -65,8 +66,10 @@ public class main {
 		
 		logan = new Characters("logan_walk1.png",10, 230);
 		
+		steve = new Monsters("monster_2.png",300,230);
 		bob = new Monsters("monster_1.png",100,230);
 		bob.upDown();
+		steve.upDown();
 		
 		// file reading for the positions of the keys
 		FileReader keyRead = new FileReader("key_pos.txt");
@@ -81,19 +84,24 @@ public class main {
 		keyPos.close();
 		}
 	
+	static void lose() {
+		EZ.closeWindowWithIndex(windowIndex);
+		gameRunning = 3;   
+	}
 	//Function that runs when player completes a level
 	static void Escape()  throws java.io.IOException{
 		if (score == 3) {
-			gameRunning = false;
+			gameRunning = 1;
 			BG.hide();
 			logan.hideCharacter();
 			EZ.refreshScreen();
 		}
-		//Restarts the game when space is pressed
-		while(!gameRunning) {
+		
+		//moves on to the next level space is pressed
+		while(gameRunning == 1) {
 			if(EZInteraction.wasKeyReleased(KeyEvent.VK_SPACE)) {
 				EZ.closeWindowWithIndex(windowIndex);
-				gameRunning = true;
+				gameRunning = 0;
 				windowIndex++;
 				currMap++;
 				score = 0;
@@ -109,8 +117,7 @@ public class main {
 		while(startUPRunning) {
 			Scenes.StartUPMenu(currMap);
 		}
-
-		while(gameRunning){
+		while(gameRunning == 0){
 			for (int i = 0; i < keys.size(); i++) {
 				if (keys.get(i).isInside(logan.getX() - logan.getWidth() / 2, logan.getY() - logan.getHeight() / 2)
 						|| keys.get(i).isInside(logan.getX() + logan.getWidth() / 2,
@@ -123,7 +130,7 @@ public class main {
 					keys.get(i).remove();
 					System.out.println("good");
 				}
-					if (bob.isInside(logan.getX() - logan.getWidth() / 2, logan.getY() - logan.getHeight() / 2)
+				if (bob.isInside(logan.getX() - logan.getWidth() / 2, logan.getY() - logan.getHeight() / 2)
 							|| bob.isInside(logan.getX() + logan.getWidth() / 2,
 									logan.getY() + logan.getHeight() / 2)
 							|| bob.isInside(logan.getX() + logan.getWidth() / 2,
@@ -133,9 +140,24 @@ public class main {
 						System.out.println("ungood");
 						logan.die();
 						if (logan.die()) {
+							song1.stop();
 							System.out.println("dead");
-							EZ.closeWindowWithIndex(windowIndex);
-							gameRunning = false;
+							lose();
+						}
+					}
+				if (steve.isInside(logan.getX() - logan.getWidth() / 2, logan.getY() - logan.getHeight() / 2)
+							|| steve.isInside(logan.getX() + logan.getWidth() / 2,
+									logan.getY() + logan.getHeight() / 2)
+							|| steve.isInside(logan.getX() + logan.getWidth() / 2,
+								logan.getY() - logan.getHeight() / 2)
+							|| steve.isInside(logan.getX() - logan.getWidth() / 2,
+									logan.getY() + logan.getHeight() / 2)) {
+						System.out.println("ungood");
+						logan.die();
+						if (logan.die()) {
+							song1.stop();
+							System.out.println("dead");
+							lose();
 						}
 					}
 				

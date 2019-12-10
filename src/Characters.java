@@ -52,17 +52,16 @@ public class Characters {
 			name.moveForward(-2);
 		}
 	}
-<<<<<<< HEAD
 	boolean die() {
 		name.hide();
 		return true;
 	}
 	
-=======
+
 
 	void hideCharacter() {
 		name.hide();
 	}
->>>>>>> 8efd523c2cf16f61c45441afed603c453ced04f7
+
 	
 }
