@@ -30,7 +30,7 @@ public class Monsters extends Characters{
 				}
 			}
 		};
-	
+		
 	//constructor for the monsters
 	public Monsters(String filename, int posx, int posy) {
 		super(filename, posx, posy);

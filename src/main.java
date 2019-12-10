@@ -25,7 +25,7 @@ import java.awt.event.KeyEvent;
 
 public class main {
 	
-	static int monsCount;
+	
 	static Monsters bob;
 	static Monsters steve;
 	static Characters logan;
